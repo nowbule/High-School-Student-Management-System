@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.school.mapper.SchoolClassTeacherMapper">
+    
+    <resultMap type="SchoolClassTeacher" id="SchoolClassTeacherResult">
+        <result property="id"    column="id"    />
+        <result property="classId"    column="class_id"    />
+        <result property="teacherId"    column="teacher_id"    />
+        <result property="subject"    column="subject"    />
+        <result property="type"    column="type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="teacherName"    column="teacher_name"    />
+    </resultMap>
+
+    <sql id="selectSchoolClassTeacherVo">
+        select t.id, t.class_id, t.teacher_id, t.subject, t.type, t.create_time, u.nick_name as teacher_name 
+        from school_class_teacher t
+        left join sys_user u on t.teacher_id = u.user_id
+    </sql>
+
+    <select id="selectSchoolClassTeacherList" parameterType="SchoolClassTeacher" resultMap="SchoolClassTeacherResult">
+        <include refid="selectSchoolClassTeacherVo"/>
+        <where>  
+            <if test="classId != null "> and t.class_id = #{classId}</if>
+            <if test="teacherId != null "> and t.teacher_id = #{teacherId}</if>
+            <if test="subject != null  and subject != ''"> and t.subject = #{subject}</if>
+            <if test="type != null  and type != ''"> and t.type = #{type}</if>
+        </where>
+    </select>
+    
+    <insert id="insertSchoolClassTeacher" parameterType="SchoolClassTeacher" useGeneratedKeys="true" keyProperty="id">
+        insert into school_class_teacher
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="classId != null">class_id,</if>
+            <if test="teacherId != null">teacher_id,</if>
+            <if test="subject != null">subject,</if>
+            <if test="type != null">type,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="classId != null">#{classId},</if>
+            <if test="teacherId != null">#{teacherId},</if>
+            <if test="subject != null">#{subject},</if>
+            <if test="type != null">#{type},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <delete id="deleteSchoolClassTeacherById" parameterType="Long">
+        delete from school_class_teacher where id = #{id}
+    </delete>
+
+    <delete id="deleteSchoolClassTeacherByIds" parameterType="String">
+        delete from school_class_teacher where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ruoyi.school.mapper.HomeworkSubmissionMapper">
+
+
+    <resultMap type="HomeworkSubmission" id="HomeworkSubmissionResult">
+
+        <result property="submissionId"    column="submission_id"    />
+
+        <result property="taskId"    column="task_id"    />
+
+        <result property="studentId"    column="student_id"    />
+
+        <result property="studentName"    column="student_name"    />
+
+        <result property="submitContent"    column="submit_content"    />
+
+        <result property="submitFiles"    column="submit_files"    />
+
+        <result property="submitTime"    column="submit_time"    />
+
+        <result property="status"    column="status"    />
+
+        <result property="score"    column="score"    />
+
+        <result property="teacherComment"    column="teacher_comment"    />
+
+        <result property="gradeTime"    column="grade_time"    />
+
+        <result property="graderId"    column="grader_id"    />
+
+        <result property="createBy"    column="create_by"    />
+
+        <result property="createTime"    column="create_time"    />
+
+        <result property="updateBy"    column="update_by"    />
+
+        <result property="updateTime"    column="update_time"    />
+
+        <result property="remark"    column="remark"    />
+
+        <result property="taskTitle"    column="taskTitle"    />
+        <result property="deadlineTime"    column="deadlineTime"    />
+        <result property="teacherName"    column="teacherName"    />
+        <result property="subject"    column="subject"    />
+
+    </resultMap>
+
+
+    <sql id="selectHomeworkSubmissionVo">
+
+        select submission_id, task_id, student_id, student_name, submit_content, submit_files, submit_time, status, score, teacher_comment, grade_time, grader_id, create_by, create_time, update_by, update_time, remark from homework_submission
+
+    </sql>
+
+
+<!--    <select id="selectHomeworkSubmissionList" parameterType="HomeworkSubmission" resultMap="HomeworkSubmissionResult">-->
+
+<!--        <include refid="selectHomeworkSubmissionVo"/>-->
+
+<!--        <where>-->
+
+<!--            <if test="taskId != null "> and task_id = #{taskId}</if>-->
+
+<!--            <if test="studentId != null "> and student_id = #{studentId}</if>-->
+
+<!--            <if test="studentName != null  and studentName != ''"> and student_name like concat('%', #{studentName}, '%')</if>-->
+
+<!--            <if test="submitContent != null  and submitContent != ''"> and submit_content = #{submitContent}</if>-->
+
+<!--            <if test="submitFiles != null  and submitFiles != ''"> and submit_files = #{submitFiles}</if>-->
+
+<!--            <if test="submitTime != null "> and submit_time = #{submitTime}</if>-->
+
+<!--            <if test="status != null  and status != ''"> and status = #{status}</if>-->
+
+<!--            <if test="score != null "> and score = #{score}</if>-->
+
+<!--            <if test="teacherComment != null  and teacherComment != ''"> and teacher_comment = #{teacherComment}</if>-->
+
+<!--            <if test="gradeTime != null "> and grade_time = #{gradeTime}</if>-->
+
+<!--            <if test="graderId != null "> and grader_id = #{graderId}</if>-->
+
+<!--        </where>-->
+
+<!--    </select>-->
+
+<!--    前端卡片修改   原先的基础-->
+
+<!--    <select id="selectHomeworkSubmissionList" parameterType="HomeworkSubmission" resultMap="HomeworkSubmissionResult">-->
+<!--        select-->
+<!--        s.submission_id, s.task_id, s.student_id, s.student_name, s.submit_content, s.submit_files, s.submit_time, s.status, s.score, s.teacher_comment, s.grade_time, s.grader_id, s.create_by, s.create_time, s.update_by, s.update_time, s.remark,-->
+<!--        /* 🔥 新增：把作业表的标题和截止时间查出来，映射到 Java 实体类 */-->
+<!--        t.task_title as taskTitle,-->
+<!--        t.deadline_time as deadlineTime-->
+<!--        from homework_submission s-->
+<!--        /* 🔥 关键：连表 */-->
+<!--        left join homework_task t on s.task_id = t.task_id-->
+<!--        <where>-->
+<!--            <if test="taskId != null "> and s.task_id = #{taskId}</if>-->
+<!--            <if test="studentId != null "> and s.student_id = #{studentId}</if>-->
+<!--            <if test="studentName != null  and studentName != ''"> and s.student_name like concat('%', #{studentName}, '%')</if>-->
+<!--            <if test="submitContent != null  and submitContent != ''"> and s.submit_content = #{submitContent}</if>-->
+<!--            <if test="submitFiles != null  and submitFiles != ''"> and s.submit_files = #{submitFiles}</if>-->
+<!--            <if test="submitTime != null "> and s.submit_time = #{submitTime}</if>-->
+<!--            <if test="status != null  and status != ''"> and s.status = #{status}</if>-->
+<!--            <if test="score != null "> and s.score = #{score}</if>-->
+<!--            <if test="teacherComment != null  and teacherComment != ''"> and s.teacher_comment = #{teacherComment}</if>-->
+<!--            <if test="gradeTime != null "> and s.grade_time = #{gradeTime}</if>-->
+<!--            <if test="graderId != null "> and s.grader_id = #{graderId}</if>-->
+
+<!--            <if test="params.onlyUnexpired != null">-->
+<!--                AND t.deadline_time > NOW()-->
+<!--            </if>-->
+<!--        </where>-->
+<!--        order by t.deadline_time asc-->
+<!--    </select>       提交作业卡片
+第二版-->
+
+<!--    <select id="selectHomeworkSubmissionList" parameterType="HomeworkSubmission" resultMap="HomeworkSubmissionResult">-->
+<!--        select-->
+<!--        t.task_id,-->
+<!--        t.task_title as taskTitle,-->
+<!--        t.deadline_time as deadlineTime,-->
+<!--        s.submission_id,-->
+<!--        s.student_id,-->
+<!--        s.status,-->
+<!--        s.score,-->
+<!--        s.create_time,-->
+<!--        s.submit_time-->
+<!--        from homework_task t-->
+<!--        left join homework_submission s on t.task_id = s.task_id and s.student_id = #{studentId}-->
+<!--        <where>-->
+<!--            <if test="params.onlyUnexpired != null">-->
+<!--                AND t.deadline_time > NOW()-->
+<!--            </if>-->
+<!--            <if test="status != null and status != ''">-->
+<!--                AND (s.status = #{status} OR s.status IS NULL)-->
+<!--            </if>-->
+<!--        </where>-->
+<!--        order by t.deadline_time asc-->
+<!--    </select>-->
+
+    <select id="selectHomeworkSubmissionList" parameterType="HomeworkSubmission" resultMap="HomeworkSubmissionResult">
+        <choose>
+            <when test="params.studentView != null and params.studentView">
+                select
+                t.task_id,
+                t.task_title as taskTitle,
+                t.deadline_time as deadlineTime,
+                u.nick_name as teacherName,
+                c.course_name as subject,
+
+                s.submission_id,
+                s.student_id,
+                s.status,
+                s.score,
+                s.create_time,
+                s.submit_time
+                from homework_task t
+                left join homework_submission s on t.task_id = s.task_id and s.student_id = #{studentId}
+                left join sys_user u on t.teacher_id = u.user_id
+                left join sys_course c on t.course_id = c.course_id
+                <where>
+                    <!-- 🔥 按班级过滤 (解决"按班级划分"需求) -->
+                    <if test="params.classId != null">
+                        AND t.class_id = #{params.classId}
+                    </if>
+
+                    <if test="params.onlyUnexpired != null">
+                        AND t.deadline_time > NOW()
+                    </if>
+                    <if test="status != null and status != ''">
+                        AND (s.status = #{status} OR s.status IS NULL)
+                    </if>
+                    
+                    <!-- 新增：科目筛选 -->
+                    <if test="params.subject != null and params.subject != ''">
+                        AND t.task_title like concat('%', #{params.subject}, '%')
+                    </if>
+                    
+                    <!-- 新增：状态筛选 (submitted, unsubmitted, expired) -->
+                    <if test="params.filterStatus == 'submitted'">
+                        AND s.submission_id IS NOT NULL
+                    </if>
+                    <if test="params.filterStatus == 'unsubmitted'">
+                        AND s.submission_id IS NULL AND t.deadline_time > NOW()
+                    </if>
+                    <if test="params.filterStatus == 'expired'">
+                        AND s.submission_id IS NULL AND t.deadline_time &lt;= NOW()
+                    </if>
+                </where>
+                order by 
+                (CASE WHEN s.submission_id IS NULL AND t.deadline_time &lt;= NOW() THEN 1 ELSE 0 END) ASC,
+                t.deadline_time ASC
+            </when>
+
+            <otherwise>
+                select
+                s.submission_id, s.task_id, s.student_id, s.student_name, s.submit_content, s.submit_files, s.submit_time, s.status, s.score, s.teacher_comment, s.grade_time, s.grader_id, s.create_by, s.create_time, s.update_by, s.update_time, s.remark,
+                t.task_title as taskTitle,
+                t.deadline_time as deadlineTime,
+                teacher.nick_name as teacherName,
+                c.course_name as subject
+                from homework_submission s
+                left join homework_task t on s.task_id = t.task_id
+                left join sys_user u on s.student_id = u.user_id
+                left join sys_user teacher on t.create_by = teacher.user_name
+                left join sys_course c on t.course_id = c.course_id
+                <where>
+                    <if test="taskId != null "> and s.task_id = #{taskId}</if>
+                    <if test="studentId != null "> and s.student_id = #{studentId}</if>
+                    <if test="studentName != null  and studentName != ''"> and s.student_name like concat('%', #{studentName}, '%')</if>
+                    <if test="status != null  and status != ''"> and s.status = #{status}</if>
+                    
+                    <!-- 新增：科目筛选 (匹配作业标题) -->
+                    <if test="params.subject != null and params.subject != ''">
+                        AND t.task_title like concat('%', #{params.subject}, '%')
+                    </if>
+
+                    <!-- 新增：班级筛选 -->
+                    <if test="params.deptId != null">
+                        AND u.dept_id = #{params.deptId}
+                    </if>
+                </where>
+                order by s.create_time desc
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectHomeworkSubmissionBySubmissionId" parameterType="Long" resultMap="HomeworkSubmissionResult">
+
+        <include refid="selectHomeworkSubmissionVo"/>
+
+        where submission_id = #{submissionId}
+
+    </select>
+
+
+    <insert id="insertHomeworkSubmission" parameterType="HomeworkSubmission" useGeneratedKeys="true" keyProperty="submissionId">
+
+        insert into homework_submission
+
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="taskId != null">task_id,</if>
+
+            <if test="studentId != null">student_id,</if>
+
+            <if test="studentName != null">student_name,</if>
+
+            <if test="submitContent != null">submit_content,</if>
+
+            <if test="submitFiles != null">submit_files,</if>
+
+            <if test="submitTime != null">submit_time,</if>
+
+            <if test="status != null">status,</if>
+
+            <if test="score != null">score,</if>
+
+            <if test="teacherComment != null">teacher_comment,</if>
+
+            <if test="gradeTime != null">grade_time,</if>
+
+            <if test="graderId != null">grader_id,</if>
+
+            <if test="createBy != null">create_by,</if>
+
+            <if test="createTime != null">create_time,</if>
+
+            <if test="updateBy != null">update_by,</if>
+
+            <if test="updateTime != null">update_time,</if>
+
+            <if test="remark != null">remark,</if>
+
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="taskId != null">#{taskId},</if>
+
+            <if test="studentId != null">#{studentId},</if>
+
+            <if test="studentName != null">#{studentName},</if>
+
+            <if test="submitContent != null">#{submitContent},</if>
+
+            <if test="submitFiles != null">#{submitFiles},</if>
+
+            <if test="submitTime != null">#{submitTime},</if>
+
+            <if test="status != null">#{status},</if>
+
+            <if test="score != null">#{score},</if>
+
+            <if test="teacherComment != null">#{teacherComment},</if>
+
+            <if test="gradeTime != null">#{gradeTime},</if>
+
+            <if test="graderId != null">#{graderId},</if>
+
+            <if test="createBy != null">#{createBy},</if>
+
+            <if test="createTime != null">#{createTime},</if>
+
+            <if test="updateBy != null">#{updateBy},</if>
+
+            <if test="updateTime != null">#{updateTime},</if>
+
+            <if test="remark != null">#{remark},</if>
+
+        </trim>
+
+    </insert>
+
+
+
+    <update id="updateHomeworkSubmission" parameterType="HomeworkSubmission">
+
+        update homework_submission
+
+        <trim prefix="SET" suffixOverrides=",">
+
+            <if test="taskId != null">task_id = #{taskId},</if>
+
+            <if test="studentId != null">student_id = #{studentId},</if>
+
+            <if test="studentName != null">student_name = #{studentName},</if>
+
+            <if test="submitContent != null">submit_content = #{submitContent},</if>
+
+            <if test="submitFiles != null">submit_files = #{submitFiles},</if>
+
+            <if test="submitTime != null">submit_time = #{submitTime},</if>
+
+            <if test="status != null">status = #{status},</if>
+
+            <if test="score != null">score = #{score},</if>
+
+            <if test="teacherComment != null">teacher_comment = #{teacherComment},</if>
+
+            <if test="gradeTime != null">grade_time = #{gradeTime},</if>
+
+            <if test="graderId != null">grader_id = #{graderId},</if>
+
+            <if test="createBy != null">create_by = #{createBy},</if>
+
+            <if test="createTime != null">create_time = #{createTime},</if>
+
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+
+            <if test="remark != null">remark = #{remark},</if>
+
+        </trim>
+
+        where submission_id = #{submissionId}
+
+    </update>
+
+
+    <delete id="deleteHomeworkSubmissionBySubmissionId" parameterType="Long">
+
+        delete from homework_submission where submission_id = #{submissionId}
+
+    </delete>
+
+
+    <delete id="deleteHomeworkSubmissionBySubmissionIds" parameterType="String">
+
+        delete from homework_submission where submission_id in
+
+        <foreach item="submissionId" collection="array" open="(" separator="," close=")">
+
+            #{submissionId}
+
+        </foreach>
+
+    </delete>
+
+    <select id="selectStudentScoreAnalysis" parameterType="HomeworkSubmission" resultMap="HomeworkSubmissionResult">
+        select
+            s.submission_id,
+            s.student_id,
+            s.score,
+            s.grade_time,
+            s.submit_time,
+            t.task_title as taskTitle,
+            COALESCE(c.course_name, 
+                CASE 
+                    WHEN t.task_title LIKE '%语文%' THEN '语文'
+                    WHEN t.task_title LIKE '%数学%' THEN '数学'
+                    WHEN t.task_title LIKE '%英语%' THEN '英语'
+                    WHEN t.task_title LIKE '%物理%' THEN '物理'
+                    WHEN t.task_title LIKE '%化学%' THEN '化学'
+                    WHEN t.task_title LIKE '%生物%' THEN '生物'
+                    WHEN t.task_title LIKE '%历史%' THEN '历史'
+                    WHEN t.task_title LIKE '%地理%' THEN '地理'
+                    WHEN t.task_title LIKE '%政治%' THEN '政治'
+                    ELSE '综合'
+                END
+            ) as subject
+        from homework_submission s
+                 left join homework_task t on s.task_id = t.task_id
+                 left join sys_course c on t.course_id = c.course_id
+        where s.student_id = #{studentId}
+          and s.status = '2'
+        order by s.grade_time asc
+    </select>
+
+</mapper>

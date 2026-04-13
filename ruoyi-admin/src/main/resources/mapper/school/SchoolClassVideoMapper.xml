@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.school.mapper.SchoolClassVideoMapper">
+    
+    <resultMap type="SchoolClassVideo" id="SchoolClassVideoResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="videoUrl"    column="video_url"    />
+        <result property="coverUrl"    column="cover_url"    />
+        <result property="description"    column="description"    />
+        <result property="subject"    column="subject"    />
+        <result property="classId"    column="class_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectSchoolClassVideoVo">
+        select id, title, video_url, cover_url, description, subject, class_id, create_by, create_time from school_class_video
+    </sql>
+
+    <select id="selectSchoolClassVideoList" parameterType="SchoolClassVideo" resultMap="SchoolClassVideoResult">
+        <include refid="selectSchoolClassVideoVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="videoUrl != null  and videoUrl != ''"> and video_url = #{videoUrl}</if>
+            <if test="coverUrl != null  and coverUrl != ''"> and cover_url = #{coverUrl}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="subject != null  and subject != ''"> and subject = #{subject}</if>
+            <if test="classId != null "> and class_id = #{classId}</if>
+        </where>
+    </select>
+    
+    <select id="selectSchoolClassVideoById" parameterType="Long" resultMap="SchoolClassVideoResult">
+        <include refid="selectSchoolClassVideoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSchoolClassVideo" parameterType="SchoolClassVideo" useGeneratedKeys="true" keyProperty="id">
+        insert into school_class_video
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="videoUrl != null">video_url,</if>
+            <if test="coverUrl != null">cover_url,</if>
+            <if test="description != null">description,</if>
+            <if test="subject != null">subject,</if>
+            <if test="classId != null">class_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="videoUrl != null">#{videoUrl},</if>
+            <if test="coverUrl != null">#{coverUrl},</if>
+            <if test="description != null">#{description},</if>
+            <if test="subject != null">#{subject},</if>
+            <if test="classId != null">#{classId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSchoolClassVideo" parameterType="SchoolClassVideo">
+        update school_class_video
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="videoUrl != null">video_url = #{videoUrl},</if>
+            <if test="coverUrl != null">cover_url = #{coverUrl},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="subject != null">subject = #{subject},</if>
+            <if test="classId != null">class_id = #{classId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSchoolClassVideoById" parameterType="Long">
+        delete from school_class_video where id = #{id}
+    </delete>
+
+    <delete id="deleteSchoolClassVideoByIds" parameterType="String">
+        delete from school_class_video where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

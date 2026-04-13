@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.school.mapper.HsScheduleMapper">
+    
+    <resultMap type="HsSchedule" id="HsScheduleResult">
+        <result property="scheduleId"    column="schedule_id"    />
+        <result property="classId"    column="class_id"    />
+        <result property="className"    column="class_name"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="courseName"    column="course_name"    />
+        <result property="teacherId"    column="teacher_id"    />
+        <result property="teacherName"    column="teacher_name"    />
+        <result property="weekDay"    column="week_day"    />
+        <result property="section"    column="section"    />
+        <result property="timePeriod"    column="time_period"    />
+        <result property="classroom"    column="classroom"    />
+        <result property="schoolYear"    column="school_year"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectHsScheduleVo">
+        select schedule_id, class_id, class_name, course_id, course_name, teacher_id, teacher_name, week_day, section, time_period, classroom, school_year, create_by, create_time, update_by, update_time, remark from hs_schedule
+    </sql>
+
+    <select id="selectHsScheduleList" parameterType="HsSchedule" resultMap="HsScheduleResult">
+        <include refid="selectHsScheduleVo"/>
+        <where>  
+            <if test="classId != null "> and class_id = #{classId}</if>
+            <if test="className != null  and className != ''"> and class_name like concat('%', #{className}, '%')</if>
+            <if test="courseId != null "> and course_id = #{courseId}</if>
+            <if test="courseName != null  and courseName != ''"> and course_name like concat('%', #{courseName}, '%')</if>
+            <if test="teacherId != null "> and teacher_id = #{teacherId}</if>
+            <if test="teacherName != null  and teacherName != ''"> and teacher_name like concat('%', #{teacherName}, '%')</if>
+            <if test="weekDay != null "> and week_day = #{weekDay}</if>
+            <if test="section != null "> and section = #{section}</if>
+            <if test="timePeriod != null  and timePeriod != ''"> and time_period = #{timePeriod}</if>
+            <if test="classroom != null  and classroom != ''"> and classroom = #{classroom}</if>
+            <if test="schoolYear != null  and schoolYear != ''"> and school_year = #{schoolYear}</if>
+            <!-- 支持根据班级ID列表筛选 -->
+            <if test="params.classIds != null and params.classIds.size() > 0">
+                and class_id in
+                <foreach item="cId" collection="params.classIds" open="(" separator="," close=")">
+                    #{cId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectHsScheduleByScheduleId" parameterType="Long" resultMap="HsScheduleResult">
+        <include refid="selectHsScheduleVo"/>
+        where schedule_id = #{scheduleId}
+    </select>
+
+    <insert id="insertHsSchedule" parameterType="HsSchedule" useGeneratedKeys="true" keyProperty="scheduleId">
+        insert into hs_schedule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="classId != null">class_id,</if>
+            <if test="className != null">class_name,</if>
+            <if test="courseId != null">course_id,</if>
+            <if test="courseName != null">course_name,</if>
+            <if test="teacherId != null">teacher_id,</if>
+            <if test="teacherName != null">teacher_name,</if>
+            <if test="weekDay != null">week_day,</if>
+            <if test="section != null">section,</if>
+            <if test="timePeriod != null">time_period,</if>
+            <if test="classroom != null">classroom,</if>
+            <if test="schoolYear != null">school_year,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="classId != null">#{classId},</if>
+            <if test="className != null">#{className},</if>
+            <if test="courseId != null">#{courseId},</if>
+            <if test="courseName != null">#{courseName},</if>
+            <if test="teacherId != null">#{teacherId},</if>
+            <if test="teacherName != null">#{teacherName},</if>
+            <if test="weekDay != null">#{weekDay},</if>
+            <if test="section != null">#{section},</if>
+            <if test="timePeriod != null">#{timePeriod},</if>
+            <if test="classroom != null">#{classroom},</if>
+            <if test="schoolYear != null">#{schoolYear},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHsSchedule" parameterType="HsSchedule">
+        update hs_schedule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="classId != null">class_id = #{classId},</if>
+            <if test="className != null">class_name = #{className},</if>
+            <if test="courseId != null">course_id = #{courseId},</if>
+            <if test="courseName != null">course_name = #{courseName},</if>
+            <if test="teacherId != null">teacher_id = #{teacherId},</if>
+            <if test="teacherName != null">teacher_name = #{teacherName},</if>
+            <if test="weekDay != null">week_day = #{weekDay},</if>
+            <if test="section != null">section = #{section},</if>
+            <if test="timePeriod != null">time_period = #{timePeriod},</if>
+            <if test="classroom != null">classroom = #{classroom},</if>
+            <if test="schoolYear != null">school_year = #{schoolYear},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where schedule_id = #{scheduleId}
+    </update>
+
+    <delete id="deleteHsScheduleByScheduleId" parameterType="Long">
+        delete from hs_schedule where schedule_id = #{scheduleId}
+    </delete>
+
+    <delete id="deleteHsScheduleByScheduleIds" parameterType="String">
+        delete from hs_schedule where schedule_id in 
+        <foreach item="scheduleId" collection="array" open="(" separator="," close=")">
+            #{scheduleId}
+        </foreach>
+    </delete>
+</mapper>

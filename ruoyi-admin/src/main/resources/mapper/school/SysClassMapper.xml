@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.school.mapper.SysClassMapper">
+    
+    <resultMap type="SysClass" id="SysClassResult">
+        <result property="classId"    column="class_id"    />
+        <result property="className"    column="class_name"    />
+        <result property="gradeLevel"    column="grade_level"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysClassVo">
+        select class_id, class_name, grade_level, status, create_by, create_time, update_by, update_time, remark from sys_class
+    </sql>
+
+    <select id="selectSysClassList" parameterType="SysClass" resultMap="SysClassResult">
+        <include refid="selectSysClassVo"/>
+        <where>  
+            <if test="className != null  and className != ''"> and class_name like concat('%', #{className}, '%')</if>
+            <if test="gradeLevel != null  and gradeLevel != ''"> and grade_level = #{gradeLevel}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysClassByClassId" parameterType="Long" resultMap="SysClassResult">
+        <include refid="selectSysClassVo"/>
+        where class_id = #{classId}
+    </select>
+
+    <insert id="insertSysClass" parameterType="SysClass" useGeneratedKeys="true" keyProperty="classId">
+        insert into sys_class
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="className != null and className != ''">class_name,</if>
+            <if test="gradeLevel != null">grade_level,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="className != null and className != ''">#{className},</if>
+            <if test="gradeLevel != null">#{gradeLevel},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysClass" parameterType="SysClass">
+        update sys_class
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="className != null and className != ''">class_name = #{className},</if>
+            <if test="gradeLevel != null">grade_level = #{gradeLevel},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where class_id = #{classId}
+    </update>
+
+    <delete id="deleteSysClassByClassId" parameterType="Long">
+        delete from sys_class where class_id = #{classId}
+    </delete>
+
+    <delete id="deleteSysClassByClassIds" parameterType="String">
+        delete from sys_class where class_id in 
+        <foreach item="classId" collection="array" open="(" separator="," close=")">
+            #{classId}
+        </foreach>
+    </delete>
+</mapper>

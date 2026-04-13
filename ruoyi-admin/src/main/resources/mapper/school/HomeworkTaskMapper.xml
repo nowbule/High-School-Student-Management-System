@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.school.mapper.HomeworkTaskMapper">
+    
+    <resultMap type="HomeworkTask" id="HomeworkTaskResult">
+        <result property="taskId"    column="task_id"    />
+        <result property="taskTitle"    column="task_title"    />
+        <result property="taskContent"    column="task_content"    />
+        <result property="fileUrls"    column="file_urls"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="classId"    column="class_id"    />
+        <result property="teacherId"    column="teacher_id"    />
+        <result property="deadlineTime"    column="deadline_time"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectHomeworkTaskVo">
+        select task_id, task_title, task_content, file_urls, course_id, class_id, teacher_id, deadline_time, status, create_by, create_time, update_by, update_time, remark from homework_task
+    </sql>
+
+    <select id="selectHomeworkTaskList" parameterType="HomeworkTask" resultMap="HomeworkTaskResult">
+        <include refid="selectHomeworkTaskVo"/>
+        <where>  
+            <if test="taskTitle != null  and taskTitle != ''"> and task_title = #{taskTitle}</if>
+            <if test="taskContent != null  and taskContent != ''"> and task_content = #{taskContent}</if>
+            <if test="fileUrls != null  and fileUrls != ''"> and file_urls = #{fileUrls}</if>
+            <if test="courseId != null "> and course_id = #{courseId}</if>
+            <if test="classId != null "> and class_id = #{classId}</if>
+            <if test="teacherId != null "> and teacher_id = #{teacherId}</if>
+            <if test="deadlineTime != null "> and deadline_time = #{deadlineTime}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectHomeworkTaskByTaskId" parameterType="Long" resultMap="HomeworkTaskResult">
+        <include refid="selectHomeworkTaskVo"/>
+        where task_id = #{taskId}
+    </select>
+
+    <insert id="insertHomeworkTask" parameterType="HomeworkTask" useGeneratedKeys="true" keyProperty="taskId">
+        insert into homework_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskTitle != null and taskTitle != ''">task_title,</if>
+            <if test="taskContent != null">task_content,</if>
+            <if test="fileUrls != null">file_urls,</if>
+            <if test="courseId != null">course_id,</if>
+            <if test="classId != null">class_id,</if>
+            <if test="teacherId != null">teacher_id,</if>
+            <if test="deadlineTime != null">deadline_time,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskTitle != null and taskTitle != ''">#{taskTitle},</if>
+            <if test="taskContent != null">#{taskContent},</if>
+            <if test="fileUrls != null">#{fileUrls},</if>
+            <if test="courseId != null">#{courseId},</if>
+            <if test="classId != null">#{classId},</if>
+            <if test="teacherId != null">#{teacherId},</if>
+            <if test="deadlineTime != null">#{deadlineTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHomeworkTask" parameterType="HomeworkTask">
+        update homework_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskTitle != null and taskTitle != ''">task_title = #{taskTitle},</if>
+            <if test="taskContent != null">task_content = #{taskContent},</if>
+            <if test="fileUrls != null">file_urls = #{fileUrls},</if>
+            <if test="courseId != null">course_id = #{courseId},</if>
+            <if test="classId != null">class_id = #{classId},</if>
+            <if test="teacherId != null">teacher_id = #{teacherId},</if>
+            <if test="deadlineTime != null">deadline_time = #{deadlineTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where task_id = #{taskId}
+    </update>
+
+    <delete id="deleteHomeworkTaskByTaskId" parameterType="Long">
+        delete from homework_task where task_id = #{taskId}
+    </delete>
+
+    <delete id="deleteHomeworkTaskByTaskIds" parameterType="String">
+        delete from homework_task where task_id in 
+        <foreach item="taskId" collection="array" open="(" separator="," close=")">
+            #{taskId}
+        </foreach>
+    </delete>
+</mapper>
